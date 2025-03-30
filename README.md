@@ -70,6 +70,5 @@ npm run dev
 - Passport.js for authentication
 - Font Awesome for icons
 
-## License
-
-Saksham Bharat Commercial Projects Funds
+## License with T&C 
+    ##Saksham Bharat
