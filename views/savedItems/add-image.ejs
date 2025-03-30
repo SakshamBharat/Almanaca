@@ -1,0 +1,74 @@
+<%- contentFor('body') %>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Add New Image</h3>
+                </div>
+                <div class="card-body">
+                    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <% errors.forEach(error => { %>
+                                    <li><%= error.msg %></li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+
+                    <form action="/saved-items/add/image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="type" value="image">
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="<%= formData.title %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                            <div class="form-text">Accepted formats: JPG, JPEG, PNG, GIF, BMP, WEBP, SVG, ICO, TIFF, HEIC, HEIF (Max size: 5MB)</div>
+                            <div id="imagePreview" class="mt-2"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Additional Notes (Optional)</label>
+                            <textarea class="form-control" id="content" name="content" rows="3"><%= formData.content %></textarea>
+                            <div class="form-text"><%= placeholder %></div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Image</button>
+                            <a href="/saved-items" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('imagePreview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <div class="alert alert-info">
+                    <img src="${e.target.result}" class="img-thumbnail" style="max-height: 200px;">
+                    <br>
+                    <small>Size: ${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = '';
+    }
+});
+</script> 

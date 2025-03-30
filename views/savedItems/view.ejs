@@ -1,0 +1,132 @@
+<%- contentFor('body') %>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0"><%= item.type.charAt(0).toUpperCase() + item.type.slice(1) %> Details</h3>
+                    <div>
+                        <a href="/saved-items/edit/<%= item._id %>" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form action="/saved-items/delete/<%= item._id %>" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" value="<%= item.title %>" readonly>
+                    </div>
+
+                    <% if (item.type === 'email') { %>
+                        <% const [email, password] = item.content.split(':') %>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="text" class="form-control" value="<%= email %>" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="text" class="form-control" value="<%= password %>" readonly>
+                        </div>
+                    <% } else if (item.type === 'bank') { %>
+                        <% const [bankName, accountNumber, pin] = item.content.split(':') %>
+                        <div class="mb-3">
+                            <label class="form-label">Bank Name</label>
+                            <input type="text" class="form-control" value="<%= bankName %>" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Account Number</label>
+                            <input type="text" class="form-control" value="<%= accountNumber %>" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">PIN</label>
+                            <input type="text" class="form-control" value="<%= pin %>" readonly>
+                        </div>
+                    <% } else if (item.type === 'phone') { %>
+                        <% const [isdCode, phoneNumber] = item.content.split(':') %>
+                        <div class="mb-3">
+                            <label class="form-label">ISD Code</label>
+                            <input type="text" class="form-control" value="<%= isdCode %>" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" value="<%= phoneNumber %>" readonly>
+                        </div>
+                    <% } else if (item.type === 'document' && item.documentPath) { %>
+                        <div class="mb-3">
+                            <label class="form-label">Document</label>
+                            <div class="document-viewer">
+                                <% if (item.documentName.toLowerCase().endsWith('.pdf')) { %>
+                                    <div class="pdf-viewer" style="height: 600px; border: 1px solid #ddd; border-radius: 4px;">
+                                        <iframe src="<%= item.documentPath %>" class="w-100 h-100" style="border: none;"></iframe>
+                                    </div>
+                                <% } else if (item.documentName.toLowerCase().endsWith('.txt')) { %>
+                                    <div class="text-viewer" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 15px; background: #f8f9fa;">
+                                        <pre style="white-space: pre-wrap; margin: 0;"><%= item.content %></pre>
+                                    </div>
+                                <% } else { %>
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-file"></i> <%= item.documentName %>
+                                        <br>
+                                        <small>This file type cannot be previewed. Please download to view.</small>
+                                    </div>
+                                <% } %>
+                                <div class="mt-2">
+                                    <a href="<%= item.documentPath %>" class="btn btn-primary" download>
+                                        <i class="fas fa-download"></i> Download Document
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% } else if (item.type === 'image' && item.imagePath) { %>
+                        <div class="mb-3">
+                            <label class="form-label">Image</label>
+                            <div>
+                                <img src="<%= item.imagePath %>" alt="<%= item.imageName %>" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <div class="mb-3">
+                            <label class="form-label">Content</label>
+                            <textarea class="form-control" rows="6" readonly><%= item.content %></textarea>
+                        </div>
+                    <% } %>
+
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            Created: <%= formatDate(item.createdAt) %>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    <small>© Almanaca - Saksham Bharat 2025</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% function getIconForType(type) {
+    switch(type) {
+        case 'email': return 'envelope';
+        case 'phone': return 'phone';
+        case 'bank': return 'university';
+        case 'text': return 'sticky-note';
+        case 'document': return 'file';
+        case 'image': return 'image';
+        default: return 'info-circle';
+    }
+} %>
+
+<% function formatDate(date) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(date).toLocaleDateString('en-US', options);
+} %> 

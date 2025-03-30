@@ -1,0 +1,105 @@
+<%- contentFor('body') %>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Welcome, <%= user.name %></h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-key fa-3x text-primary mb-3"></i>
+                                    <h5 class="card-title">Saved Items</h5>
+                                    <p class="card-text">Manage your secure information</p>
+                                    <a href="/saved-items" class="btn btn-primary">View Items</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-plus-circle fa-3x text-success mb-3"></i>
+                                    <h5 class="card-title">Add New Item</h5>
+                                    <p class="card-text">Save new information securely</p>
+                                    <a href="/saved-items/add" class="btn btn-success">Add Item</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user-shield fa-3x text-info mb-3"></i>
+                                    <h5 class="card-title">Account Security</h5>
+                                    <p class="card-text">Manage your account settings</p>
+                                    <a href="/users/profile" class="btn btn-info text-white">Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h4>Recent Items</h4>
+                        <div class="row">
+                            <% if (recentItems && recentItems.length > 0) { %>
+                                <% recentItems.forEach(item => { %>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-<%= getIconForType(item.type) %>"></i>
+                                                    <%= item.title %>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <small class="text-muted">
+                                                        Added <%= formatDate(item.createdAt) %>
+                                                    </small>
+                                                </p>
+                                                <div class="btn-group w-100">
+                                                    <a href="/saved-items/edit/<%= item._id %>" class="btn btn-outline-primary btn-sm">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <form action="/saved-items/delete/<%= item._id %>" method="POST" class="d-inline">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        No items saved yet. Click "Add Item" to get started!
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% function getIconForType(type) {
+    switch(type) {
+        case 'email': return 'envelope';
+        case 'phone': return 'phone';
+        case 'bank': return 'university';
+        case 'text': return 'sticky-note';
+        case 'document': return 'file';
+        case 'image': return 'image';
+        default: return 'info-circle';
+    }
+} %>
+
+<% function formatDate(date) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(date).toLocaleDateString('en-US', options);
+} %> 

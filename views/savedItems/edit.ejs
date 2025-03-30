@@ -1,0 +1,118 @@
+<%- contentFor('body') %>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Edit Item</h3>
+                </div>
+                <div class="card-body">
+                    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <% errors.forEach(error => { %>
+                                    <li><%= error.msg %></li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+
+                    <% if (item.type === 'document') { %>
+                        <form action="/saved-items/edit/<%= item._id %>/document" method="POST" enctype="multipart/form-data">
+                    <% } else if (item.type === 'image') { %>
+                        <form action="/saved-items/edit/<%= item._id %>/image" method="POST" enctype="multipart/form-data">
+                    <% } else { %>
+                        <form action="/saved-items/edit/<%= item._id %>" method="POST">
+                    <% } %>
+                        <input type="hidden" name="type" value="<%= item.type %>">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="<%= item.title %>" required>
+                        </div>
+
+                        <% if (item.type === 'document') { %>
+                            <div class="mb-3">
+                                <label for="document" class="form-label">Document</label>
+                                <input type="file" class="form-control" id="document" name="document" accept=".pdf,.doc,.docx,.txt" required>
+                                <div class="form-text">Current file: <%= item.documentName %></div>
+                            </div>
+                        <% } else if (item.type === 'image') { %>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                <div class="form-text">Current file: <%= item.imageName %></div>
+                            </div>
+                        <% } else if (item.type === 'email') { %>
+                            <% const [email, password] = item.content.split(':'); %>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<%= email %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" value="<%= password %>" required>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password')">View</button>
+                                </div>
+                            </div>
+                        <% } else if (item.type === 'bank') { %>
+                            <% const [bankName, accountNumber, pin] = item.content.split(':'); %>
+                            <div class="mb-3">
+                                <label for="bankName" class="form-label">Bank Name</label>
+                                <input type="text" class="form-control" id="bankName" name="bankName" value="<%= bankName %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="accountNumber" class="form-label">Account Number</label>
+                                <input type="text" class="form-control" id="accountNumber" name="accountNumber" value="<%= accountNumber %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pin" class="form-label">PIN</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="pin" name="pin" value="<%= pin %>" required>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('pin')">View</button>
+                                </div>
+                            </div>
+                        <% } else if (item.type === 'phone') { %>
+                            <% const [isdCode, phoneNumber] = item.content.split(':'); %>
+                            <div class="mb-3">
+                                <label for="isdCode" class="form-label">ISD Code</label>
+                                <input type="text" class="form-control" id="isdCode" name="isdCode" value="<%= isdCode %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="<%= phoneNumber %>" required>
+                            </div>
+                        <% } else { %>
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Content</label>
+                                <textarea class="form-control" id="content" name="content" rows="3" required><%= item.content %></textarea>
+                            </div>
+                        <% } %>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Additional Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3"><%= item.notes || '' %></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="/saved-items" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+    } else {
+        input.type = 'password';
+    }
+}
+</script> 
