@@ -68,9 +68,8 @@ npm run dev
 - EJS (Embedded JavaScript)
 - MongoDB with Mongoose
 - Passport.js for authentication
-- Bootstrap 5 for styling
 - Font Awesome for icons
 
 ## License
 
-MIT License 
+Saksham Bharat Commercial Projects Funds
