@@ -71,4 +71,4 @@ npm run dev
 - Font Awesome for icons
 
 ## License with T&C 
-    ##Saksham Bharat
+ Saksham Bharat
