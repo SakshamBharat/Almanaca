@@ -1,4 +1,4 @@
-# Account Saver
+# Almanaca
 
 A secure web application for managing your account details using Express.js, EJS, and MongoDB.
 
@@ -22,7 +22,7 @@ A secure web application for managing your account details using Express.js, EJS
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd account-saver
+cd Almanaca
 ```
 
 2. Install dependencies:
@@ -71,4 +71,6 @@ npm run dev
 - Font Awesome for icons
 
 ## License with T&C 
+``` Almanaca 
  Saksham Bharat
+```
