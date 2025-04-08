@@ -1,0 +1,131 @@
+<%- contentFor('body') %>
+
+<div class="container">
+    <div class="row align-items-center min-vh-75">
+        <div class="col-md-6">
+            <h1 class="display-4 mb-4">Welcome to Almanaca</h1>
+            <p class="lead mb-4">Your secure vault for storing sensitive information. Keep your important data safe and organized.</p>
+            <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+                <a href="/users/register" class="btn btn-primary btn-lg px-4 me-md-2">
+                    <i class="fas fa-user-plus"></i> Get Started
+                </a>
+                <a href="/users/login" class="btn btn-outline-primary btn-lg px-4">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h3 class="card-title text-center mb-4">Why Choose Almanaca?</h3>
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-shield-alt fa-2x text-primary me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">Secure Storage</h5>
+                                    <p class="mb-0">Your sensitive information is encrypted and protected</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-folder-open fa-2x text-success me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">Organized Management</h5>
+                                    <p class="mb-0">Easily store and manage different types of information</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-mobile-alt fa-2x text-info me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">Access Anywhere</h5>
+                                    <p class="mb-0">Access your information securely from any device</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user-shield fa-2x text-warning me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">User-Friendly</h5>
+                                    <p class="mb-0">Simple and intuitive interface for managing your data</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Features</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-envelope fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">Email Storage</h5>
+                            <p class="card-text">Securely store email addresses and credentials</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-phone fa-3x text-success mb-3"></i>
+                            <h5 class="card-title">Phone Numbers</h5>
+                            <p class="card-text">Keep your important phone numbers safe</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-university fa-3x text-info mb-3"></i>
+                            <h5 class="card-title">Bank Details</h5>
+                            <p class="card-text">Store sensitive banking information securely</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-alt fa-3x text-warning mb-3"></i>
+                            <h5 class="card-title">Document Storage</h5>
+                            <p class="card-text">Upload and store important documents</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-image fa-3x text-danger mb-3"></i>
+                            <h5 class="card-title">Image Storage</h5>
+                            <p class="card-text">Securely store important images</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-sticky-note fa-3x text-secondary mb-3"></i>
+                            <h5 class="card-title">Text Notes</h5>
+                            <p class="card-text">Save important text information</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.min-vh-75 {
+    min-height: 75vh;
+}
+</style> 

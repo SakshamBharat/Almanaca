@@ -1,0 +1,80 @@
+<%- contentFor('body') %>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Add New <%= type.charAt(0).toUpperCase() + type.slice(1) %></h3>
+                </div>
+                <div class="card-body">
+                    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <% errors.forEach(error => { %>
+                                    <li><%= error.msg %></li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+
+                    <form action="/saved-items/add" method="POST">
+                        <input type="hidden" name="type" value="<%= type %>">
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="<%= formData.title %>" required>
+                        </div>
+
+                        <% if (type === 'email') { %>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<%= formData.email %>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="text" class="form-control" id="password" name="password" value="<%= formData.password %>" required>
+                            </div>
+                        <% } else if (type === 'bank') { %>
+                            <div class="mb-3">
+                                <label for="bankName" class="form-label">Bank Name</label>
+                                <input type="text" class="form-control" id="bankName" name="bankName" value="<%= formData.bankName %>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="accountNumber" class="form-label">Account Number</label>
+                                <input type="text" class="form-control" id="accountNumber" name="accountNumber" value="<%= formData.accountNumber %>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pin" class="form-label">PIN</label>
+                                <input type="text" class="form-control" id="pin" name="pin" value="<%= formData.pin %>" required>
+                            </div>
+                        <% } else if (type === 'phone') { %>
+                            <div class="mb-3">
+                                <label for="isdCode" class="form-label">ISD Code</label>
+                                <input type="text" class="form-control" id="isdCode" name="isdCode" value="<%= formData.isdCode %>" placeholder="e.g., +91" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" value="<%= formData.phoneNumber %>" placeholder="e.g., 9876543210" required>
+                            </div>
+                        <% } else { %>
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Your Note</label>
+                                <textarea class="form-control" id="content" name="content" rows="6"><%= formData.content %></textarea>
+                            </div>
+                        <% } %>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Item</button>
+                            <a href="/saved-items" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

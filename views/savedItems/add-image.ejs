@@ -1,0 +1,185 @@
+<%- contentFor('body') %>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Add New Image</h3>
+                </div>
+                <div class="card-body">
+                    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <% errors.forEach(error => { %>
+                                    <li><%= error.msg %></li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+
+                    <form action="/saved-items/add/image" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="type" value="image">
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="<%= formData.title %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                            <div class="form-text">Accepted formats: JPG, JPEG, PNG, GIF, BMP, WEBP, SVG, ICO, TIFF, HEIC, HEIF (Max size: 5MB)</div>
+                            <div id="imagePreview" class="mt-2"></div>
+                            <div id="imageError" class="text-danger mt-2"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Additional Notes (Optional)</label>
+                            <textarea class="form-control" id="content" name="content" rows="3"><%= formData.content %></textarea>
+                            <div class="form-text"><%= placeholder %></div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Image</button>
+                            <a href="/saved-items" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Three.js container -->
+<div id="animation-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+
+<!-- Three.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// Three.js Animation
+let scene, camera, renderer, cube;
+let isAnimating = true;
+
+function init() {
+    // Create scene
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0f0f0);
+
+    // Create camera
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // Create renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('animation-container').appendChild(renderer.domElement);
+
+    // Create cube
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshPhongMaterial({ 
+        color: 0x00ff00,
+        specular: 0x555555,
+        shininess: 30 
+    });
+    cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+    // Add lights
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(1, 1, 1);
+    scene.add(light);
+
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+
+    // Handle window resize
+    window.addEventListener('resize', onWindowResize, false);
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+    if (!isAnimating) return;
+    
+    requestAnimationFrame(animate);
+    
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+    
+    renderer.render(scene, camera);
+}
+
+// Initialize and start animation
+init();
+animate();
+
+// Image upload handling
+document.getElementById('image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('imagePreview');
+    const error = document.getElementById('imageError');
+    
+    // Clear previous messages
+    preview.innerHTML = '';
+    error.innerHTML = '';
+    
+    if (file) {
+        // Validate file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            error.innerHTML = 'File size exceeds 5MB limit';
+            this.value = ''; // Clear the file input
+            return;
+        }
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            error.innerHTML = 'Please select a valid image file';
+            this.value = ''; // Clear the file input
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <div class="alert alert-info">
+                    <img src="${e.target.result}" class="img-thumbnail" style="max-height: 200px;">
+                    <br>
+                    <small>Size: ${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                </div>
+            `;
+            
+            // Change cube color based on successful image load
+            cube.material.color.setHex(0x0000ff);
+            setTimeout(() => {
+                cube.material.color.setHex(0x00ff00);
+            }, 1000);
+        };
+        reader.onerror = function() {
+            error.innerHTML = 'Error reading file. Please try again.';
+            this.value = ''; // Clear the file input
+            cube.material.color.setHex(0xff0000);
+            setTimeout(() => {
+                cube.material.color.setHex(0x00ff00);
+            }, 1000);
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Pause animation when form is focused
+document.querySelector('form').addEventListener('focusin', () => {
+    isAnimating = false;
+});
+
+// Resume animation when form is blurred
+document.querySelector('form').addEventListener('focusout', () => {
+    isAnimating = true;
+    animate();
+});
+</script> 

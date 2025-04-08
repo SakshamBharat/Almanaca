@@ -1,0 +1,142 @@
+<%- contentFor('body') %>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Saved Items</h2>
+        <a href="/saved-items/add" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Item
+        </a>
+    </div>
+
+    <% if (success_msg) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <% if (error_msg) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <% if (error) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <% if (items.length === 0) { %>
+        <div class="text-center py-5">
+            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+            <h4>No items saved yet</h4>
+            <p class="text-muted">Start by adding your first item!</p>
+            <a href="/saved-items/add" class="btn btn-primary">Add New Item</a>
+        </div>
+    <% } else { %>
+        <div class="row">
+            <% items.forEach(function(item) { %>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <% if (item.type === 'image' && item.imagePath) { %>
+                            <img src="<%= item.imagePath %>" class="card-img-top" alt="<%= item.title %>" style="height: 200px; object-fit: cover;">
+                        <% } else if (item.type === 'document') { %>
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-file fa-3x text-primary"></i>
+                            </div>
+                        <% } else { %>
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-<%= iconMap[item.type] || 'question-circle' %> fa-3x text-primary"></i>
+                            </div>
+                        <% } %>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title"><%= item.title %></h5>
+                            <p class="card-text text-muted">
+                                <small>
+                                    <i class="fas fa-<%= iconMap[item.type] || 'question-circle' %>"></i>
+                                    <%= item.type.charAt(0).toUpperCase() + item.type.slice(1) %>
+                                </small>
+                            </p>
+                            <% if (item.type === 'document') { %>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <i class="fas fa-file"></i> <%= item.documentName %>
+                                    </small>
+                                </p>
+                            <% } else if (item.type === 'image') { %>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <i class="fas fa-image"></i> <%= item.imageName %>
+                                    </small>
+                                </p>
+                            <% } else { %>
+                                <% const content = item.content.split(':')[0]; %>
+                                <p class="card-text text-truncate"><%= content %></p>
+                            <% } %>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Added <%= new Date(item.createdAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    }) %>
+                                </small>
+                            </p>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent">
+                            <div class="btn-group w-100">
+                                <a href="/saved-items/view/<%= item._id %>" class="btn btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="/saved-items/edit/<%= item._id %>" class="btn btn-outline-secondary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form action="/saved-items/delete/<%= item._id %>" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+</div>
+
+<script>
+function getIconForType(type) {
+    const icons = {
+        email: 'envelope',
+        phone: 'phone',
+        bank: 'university',
+        text: 'sticky-note',
+        document: 'file-alt',
+        image: 'image'
+    };
+    return icons[type] || 'question-circle';
+}
+
+function capitalizeFirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+</script> 
